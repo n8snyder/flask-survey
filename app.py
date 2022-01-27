@@ -8,12 +8,12 @@ app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
 
 debug = DebugToolbarExtension(app)
 
-responses = []
-
 
 @app.get("/")
 def homepage():
     """Survey homepage with start survey button"""
+
+    session["responses"] = []
 
     return render_template(
         "survey_start.html", title=survey.title, instructions=survey.instructions
@@ -57,7 +57,7 @@ def answer():
 
     form_data = request.form
     answer = form_data.get("answer")
-    responses.append(answer)
+    session["responses"] += [answer]
     next_question = int(form_data.get("question_number")) + 1
 
     return redirect(f"/questions/{next_question}")
