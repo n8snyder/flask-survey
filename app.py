@@ -29,10 +29,10 @@ def start_survey():
 
 @app.get("/questions/<int:question_number>")
 def get_question(question_number):
-    """Displays form for the given question"""
-    
+    """Displays form for the given question or redirects to thanks page"""
+
     if question_number >= len(survey.questions):
-        return redirect("/thanks") 
+        return redirect("/thanks")
 
     else:
         question = survey.questions[question_number]
@@ -43,15 +43,18 @@ def get_question(question_number):
             question_number=question_number,
         )
 
+
 @app.get("/thanks")
 def get_thanks_page():
     """Displays thanks page"""
+
     return render_template("completion.html")
 
 
 @app.post("/answer")
 def answer():
     """Record answer and redirect to next question"""
+
     form_data = request.form
     answer = form_data.get("answer")
     responses.append(answer)
