@@ -19,6 +19,12 @@ def homepage():
     )
 
 
-@app.get("/begin")
+@app.post("/begin")
 def start_survey():
-    pass
+    return redirect("/questions/0")
+
+@app.get("/questions/<int:question_number>")
+def get_question(question_number):
+    question = survey.questions[question_number]
+    return  render_template("question.html" , question = question.question, question_choices = question.choices)
+
