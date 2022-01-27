@@ -13,6 +13,7 @@ responses = []
 
 @app.get("/")
 def homepage():
+    """Survey homepage with start survey button"""
 
     return render_template(
         "survey_start.html", title=survey.title, instructions=survey.instructions
@@ -21,10 +22,30 @@ def homepage():
 
 @app.post("/begin")
 def start_survey():
+    """Redirect to first question"""
+
     return redirect("/questions/0")
+
 
 @app.get("/questions/<int:question_number>")
 def get_question(question_number):
-    question = survey.questions[question_number]
-    return  render_template("question.html" , question = question.question, question_choices = question.choices)
+    """Displays form for the given question"""
 
+    question = survey.questions[question_number]
+    return render_template(
+        "question.html",
+        question=question.question,
+        question_choices=question.choices,
+        question_number=question_number,
+    )
+
+
+@app.post("/answer")
+def answer():
+    """Record answer and redirect to next question"""
+    form_data = request.form
+    answer = form_data.get("answer")
+    responses.append(answer)
+    next_question = int(form_data.get("question_number")) + 1
+
+    return redirect(f"/questions/{next_question}")
