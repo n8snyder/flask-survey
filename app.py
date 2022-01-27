@@ -24,14 +24,18 @@ def homepage():
 def start_survey():
     """Redirect to first question"""
 
+    session["question_number"] = 0
     return redirect("/questions/0")
 
 
 @app.get("/questions/<int:question_number>")
 def get_question(question_number):
     """Displays form for the given question or redirects to thanks page"""
+    
+    if session["question_number"] != question_number:
+        return redirect(f"/questions/{session['question_number']}")
 
-    if question_number >= len(survey.questions):
+    elif question_number == len(survey.questions):
         return redirect("/thanks")
 
     else:
@@ -40,7 +44,6 @@ def get_question(question_number):
             "question.html",
             question=question.question,
             question_choices=question.choices,
-            question_number=question_number,
         )
 
 
@@ -58,6 +61,6 @@ def answer():
     form_data = request.form
     answer = form_data.get("answer")
     session["responses"] += [answer]
-    next_question = int(form_data.get("question_number")) + 1
+    session["question_number"] += 1
 
-    return redirect(f"/questions/{next_question}")
+    return redirect(f"/questions/{session['question_number']}")
