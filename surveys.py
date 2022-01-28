@@ -61,3 +61,11 @@ surveys = {
     "satisfaction": satisfaction_survey,
     "personality": personality_quiz,
 }
+
+class Answer:
+    """ For answers with text """
+
+    def __init__(self, selection, response=""):
+        """ Creates answer with radio selection and text response"""
+        self.selection = selection
+        self.response = response

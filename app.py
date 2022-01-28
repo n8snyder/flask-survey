@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from surveys import satisfaction_survey as survey
+from surveys import personality_quiz as survey
+from surveys import Answer
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "never-tell!"
@@ -42,8 +43,9 @@ def get_question(question_number):
         question = survey.questions[question_number]
         return render_template(
             "question.html",
-            question=question.question,
-            question_choices=question.choices,
+            question = question.question,
+            question_choices = question.choices,
+            allow_text = question.allow_text,
         )
 
 
@@ -60,7 +62,8 @@ def answer():
 
     form_data = request.form
     answer = form_data.get("answer")
-    session["responses"] += [answer]
+    text_response = form_data.get("response", "")
+    session["responses"] += [Answer(answer, text_response)]
     session["question_number"] += 1
 
     return redirect(f"/questions/{session['question_number']}")
