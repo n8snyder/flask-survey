@@ -10,12 +10,12 @@
     <input required type="radio" name="answer" value="{{ choice }}">
     {{ choice }}
   </p>
-    {% if allow_text %}
-    <p>
-      <textarea rows="4" cols="50" name="response">
-    </p>
-    {% endif %}
   {% endfor %}
+  {% if allow_text %}
+  <p>
+    <textarea rows="4" cols="50" name="response"></textarea>
+  </p>
+  {% endif %}
 
   <button>Continue</button>
 </form>
