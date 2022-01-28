@@ -13,8 +13,6 @@ debug = DebugToolbarExtension(app)
 def homepage():
     """Survey homepage with start survey button"""
 
-    session["responses"] = []
-
     return render_template(
         "survey_start.html", title=survey.title, instructions=survey.instructions
     )
@@ -24,6 +22,7 @@ def homepage():
 def start_survey():
     """Redirect to first question"""
 
+    session["responses"] = []
     session["question_number"] = 0
     return redirect("/questions/0")
 
@@ -31,8 +30,9 @@ def start_survey():
 @app.get("/questions/<int:question_number>")
 def get_question(question_number):
     """Displays form for the given question or redirects to thanks page"""
-    
+
     if session["question_number"] != question_number:
+        flash(f"Question number {question_number} is out of order")
         return redirect(f"/questions/{session['question_number']}")
 
     elif question_number == len(survey.questions):
